@@ -26,6 +26,24 @@ const getContact = async (req, res) => {
 const createNewContact = async (req, res) => {
     const { firstName, lastName, phone } = req.body;
 
+    //empty fields
+    let emptyFields = [];
+
+    if (!firstName) {
+        emptyFields.push("firstName");
+    }
+    if (!lastName) {
+        emptyFields.push("lastName");
+    }
+    if (!phone) {
+        emptyFields.push("phone");
+    }
+    if (emptyFields.length > 0) {
+        return res
+            .status(400)
+            .json({ error: "please fill the required fields", emptyFields });
+    }
+
     //adding doc to db
     try {
         const contact = await Contact.create({ firstName, lastName, phone });
